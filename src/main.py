@@ -1,5 +1,5 @@
 def choose_language():
-    print("Choose a language you want to practice:")
+    print("Choose a language to practice:")
     print("1 — Spanish")
     print("2 — Russian")
     print("3 — Japanese")
