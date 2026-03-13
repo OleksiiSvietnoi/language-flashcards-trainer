@@ -1,0 +1,11 @@
+hola | hello
+gato | cat
+perro | dog
+gracias | thank you
+adiós | goodbye
+casa | house
+libro | book
+agua | water
+amigo | friend
+escuela | school
+

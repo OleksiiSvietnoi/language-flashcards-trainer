@@ -1,0 +1,10 @@
+こんにちは | konnichiwa | hello
+猫 | neko | cat
+犬 | inu | dog
+ありがとう | arigatou | thank you
+さようなら | sayounara | goodbye
+家 | ie | house
+本 | hon | book
+水 | mizu | water
+友達 | tomodachi | friend
+学校 | gakkou | school

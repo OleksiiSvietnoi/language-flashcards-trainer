@@ -1,0 +1,10 @@
+привет | privet | hello
+кот | kot | cat
+собака | sobaka | dog
+спасибо | spasibo | thank you
+пока | poka | goodbye
+дом | dom | house
+книга | kniga | book
+вода | voda | water
+друг | drug | friend
+школа | shkola | school

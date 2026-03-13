@@ -1,0 +1,10 @@
+bonjour | hello
+chat | cat
+chien | dog
+merci | thank you
+au revoir | goodbye
+maison | house
+livre | book
+eau | water
+ami | friend
+école | school
