@@ -1,14 +1,17 @@
 import os
 import random
+from colorama import Fore, Style, init
+init(autoreset=True)
+
 
 def choose_language():
-    print("Choose a language to practice:")
+    print(Fore.CYAN + "Choose a language to practice:")
     print("1 - Spanish")
     print("2 - Russian")
     print("3 - Japanese")
     print("4 - French")
 
-    choice = input("Enter number: ")
+    choice = input("Enter number: ").strip()
 
     if choice == "1":
         return "spanish.txt"
@@ -19,23 +22,45 @@ def choose_language():
     elif choice == "4":
         return "french.txt"
     else:
-        print("Invalid choice. Try again.")
+        print(Fore.YELLOW + "Invalid choice. Try again.")
         return choose_language()
 
 
+def choose_mode():
+    print(Fore.CYAN + "\nChoose mode:")
+    print("1 - Normal (word -> translation)")
+    print("2 - Reverse (translation -> word)")
+    m = input("Enter mode (1/2): ").strip()
+    return m == "2"
+
+
+def choose_rounds(default=5):
+    print(Fore.CYAN + f"\nHow many questions? (default {default})")
+    val = input("Enter number or press Enter: ").strip()
+    if val == "":
+        return default
+    try:
+        n = int(val)
+        if n > 0:
+            return n
+        else:
+            print(Fore.YELLOW + "Number must be positive. Using default.")
+            return default
+    except ValueError:
+        print(Fore.YELLOW + "Invalid number. Using default.")
+        return default
+
+
 def load_words(filename):
-
     script_dir = os.path.dirname(__file__)
-
     project_root = os.path.dirname(script_dir)
-
     path = os.path.join(project_root, "data", filename)
 
     lines = []
     try:
         f = open(path, "r", encoding="utf-8")
     except FileNotFoundError:
-        print("File not found:", path)
+        print(Fore.RED + "File not found:", path)
         return lines
 
     for line in f:
@@ -46,17 +71,18 @@ def load_words(filename):
     return lines
 
 
-def simple_quiz(lines, rounds=5):
+def simple_quiz(lines, rounds=5, reverse=False):
     if not lines:
-        print("No words to quiz.")
+        print(Fore.RED + "No words to quiz.")
         return
 
     pool = lines.copy()
     score = 0
+    wrong_answers = []
 
     for i in range(rounds):
         if not pool:
-            print("No more unique questions left.")
+            print(Fore.YELLOW + "No more unique questions left.")
             break
 
         pair = random.choice(pool)
@@ -65,25 +91,49 @@ def simple_quiz(lines, rounds=5):
         parts = pair.split("|")
 
         if len(parts) == 3:
-            question = parts[0].strip() + " (" + parts[1].strip() + ")"
-            answer = parts[2].strip()
+            word = parts[0].strip()
+            reading = parts[1].strip()
+            translation = parts[2].strip()
         elif len(parts) == 2:
-            question = parts[0].strip()
-            answer = parts[1].strip()
+            word = parts[0].strip()
+            reading = ""
+            translation = parts[1].strip()
         else:
-            question = pair
-            answer = ""
+            word = pair.strip()
+            reading = ""
+            translation = ""
 
-        print(f"Question {i+1}/{rounds}: Translate -> {question}")
+        if reverse:
+            question = translation or word
+            answer = word
+        else:
+            question = word + (f" ({reading})" if reading else "")
+            answer = translation
+
+        print(Fore.CYAN + f"\nQuestion {i+1}/{rounds}: Translate -> {question}")
         user = input("Your answer (or q to quit): ").strip()
 
         if user.lower() == "q":
+            print(Fore.YELLOW + "Quiz stopped by user.")
             break
 
-        if user.lower() == answer.lower():
-            print("Correct!\n")
+        if answer and user.lower() == answer.lower():
+            print(Fore.GREEN + "Correct!\n")
             score += 1
         else:
-            print("Wrong. Correct:", answer, "\n")
+            print(Fore.RED + "Wrong. Correct: " + (answer if answer else "(no answer available)") + "\n")
+            wrong_answers.append((question, answer))
 
-    print("Quiz finished. Score:", score, "/", i+1)
+    asked = i + 1 if user.lower() != "q" else i
+    print(Fore.CYAN + f"Quiz finished. Score: {score} / {asked}")
+
+    if wrong_answers:
+        print(Fore.YELLOW + "\nWords you should review:")
+        for q, a in wrong_answers:
+            print(f"- {q} -> {a}")
+
+    return {
+        "asked": asked,
+        "correct": score,
+        "wrong": wrong_answers
+    }
