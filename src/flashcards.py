@@ -27,11 +27,18 @@ def choose_language():
 
 
 def choose_mode():
-    print(Fore.CYAN + "\nChoose mode:")
-    print("1 - Normal (word -> translation)")
-    print("2 - Reverse (translation -> word)")
-    m = input("Enter mode (1/2): ").strip()
-    return m == "2"
+    while True:
+        print("\nChoose mode:")
+        print("1 - Normal (word -> translation)")
+        print("2 - Reverse (translation -> word)")
+        mode = input("Enter mode (1/2): ").strip()
+
+        if mode == "1":
+            return False
+        elif mode == "2":
+            return True
+        else:
+            print("Invalid choice. Please enter 1 or 2.")
 
 
 def choose_rounds(default=5):
